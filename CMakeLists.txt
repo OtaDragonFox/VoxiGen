@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.6.0)
 
 project(voxigen VERSION 0.1.0)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+
+file(GLOB_RECURSE voxigen_src CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
+
+add_executable(${PROJECT_NAME} ${voxigen_src})
 
 add_subdirectory(dep/glfw)
 
