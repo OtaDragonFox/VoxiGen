@@ -1,5 +1,9 @@
-#include <iostream>
 #include "main.h"
+#include "modules/logger.h"
+#include <iostream>
+
+
+Application * Application::game_application = nullptr;
 
 // Application entry point :P
 int main()
@@ -7,9 +11,12 @@ int main()
     APP.StartApplication();
 }
 
-Application * Application::game_application = nullptr;
+
 Application::Application()
 {
+
+
+
     if(game_application)
     {
         //TODO: error applicaton allready fixend - you dont need two you greedy bean!
@@ -19,9 +26,18 @@ Application::Application()
 
 void Application::StartApplication()
 {
-    std::cout << "hello world!" << std::endl;
-    while(true)
-    {
+    logger m_logger;
+    
+    m_logger.Log();
 
-    }
+    //while(is_running)
+    //{
+    //    //TODO: calculate delta time and setup system sleep based on that so the game doesnt hog all system performance
+//
+    //}
+}
+
+void Application::RequestShutdown(int reason)
+{
+    //TODO: Log reason -> on crash should log everything to file and provide extra information 
 }

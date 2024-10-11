@@ -12,7 +12,15 @@ public:
     
     }
 
+
+    void RequestShutdown(int reason);
+
+
     static Application* game_application;
+private:
+
+    bool is_running = false;
+
 
 };
 
