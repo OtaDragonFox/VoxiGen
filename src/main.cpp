@@ -26,10 +26,11 @@ Application::Application()
 
 void Application::StartApplication()
 {
-    logger m_logger;
-    
-    m_logger.Log();
+    LOG_MESSG("welcome to voxigen");
+    LOG_WARNG("welcome to voxigen");
+    LOG_ERROR("welcome to voxigen");
 
+    
     //while(is_running)
     //{
     //    //TODO: calculate delta time and setup system sleep based on that so the game doesnt hog all system performance

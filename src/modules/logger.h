@@ -1,20 +1,7 @@
 #include "../types.h"
 #include "spdlog/spdlog.h"
-//
-//enum class log_level {
-//    LL_MESSG,
-//    LL_WARNG,
-//    LL_ERROR,
-//    LL_FATAL
-//};
-//
-class logger
-{
-public:
-    void Log();
 
 
-private:
-    
-};
-
+#define LOG_MESSG(...) spdlog::info(__VA_ARGS__)
+#define LOG_WARNG(...) spdlog::warn(__VA_ARGS__)
+#define LOG_ERROR(...) spdlog::error(__VA_ARGS__)
