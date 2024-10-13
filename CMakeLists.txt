@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6.0)
 
 project(voxigen VERSION 0.1.0)
 
+set(CMAKE_CXX_STANDARD 20)
+
 
 file(GLOB_RECURSE voxigen_src CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
 
