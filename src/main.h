@@ -11,7 +11,6 @@ public:
 
     inline static Application& GetApplication(){
         return *game_application;
-    
     }
 
 
