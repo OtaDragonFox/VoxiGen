@@ -3,36 +3,67 @@
 #include "modules/logger.h"
 #include "modules/platform.h"
 
+#include <chrono>
+#include <thread>
+
 #include <iostream>
 
 Application* Application::game_application = nullptr;
-
+using namespace std::chrono_literals;
 // Application entry point :P
 int main() {
   APP.StartApplication();
 }
 
-Application::Application() {
-
-  if (game_application) {
-    //TODO: error applicaton allready fixend - you dont need two you greedy bean!
-  }
-  game_application = this;
-}
 
 void Application::StartApplication() {
   // LOG_MESSG("welcome to voxigen");
   // LOG_WARNG("welcome to voxigen");
   // LOG_ERROR("welcome to voxigen");
-  FileIO::LoadTextFromFile("a");
+  FileIO::LoadTextFromFile("a"); //-> TODO: this is testing code needs to be reworked later
+  if(!SetFrameRate(10))
+    return;
+  
+
 
   LOG_MESSG(PLATFORM.CreateFolder("test"));
 
-  //while(is_running)
-  //{
-  //    //TODO: calculate delta time and setup system sleep based on that so the game doesnt hog all system performance
-  //
-  //}
+
+  while(is_running)
+  {
+    auto start_frame_time = std::chrono::steady_clock::now();
+    //TODO: move time stuff into a custom class  
+    
+    
+
+    std::this_thread::sleep_for(std::chrono::nanoseconds( 50));
+    auto end_frame_time = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsed = end_frame_time - start_frame_time;
+
+    if(((int)delta_in_ms - elapsed.count()*1000)> 0)
+    {
+        LOG_MESSG("frame took {0:.3f}ms to process",(elapsed.count()*1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds( int64_t(delta_in_ms - elapsed.count()*1000)));
+
+    }
+    else
+      LOG_ERROR("FRAME TAKES TOO LONG TO RENDER !");
+  
+  }
+}
+
+
+bool Application::SetFrameRate(float frames_sec) 
+{
+  if(!(frames_sec > 5))
+  {
+    return false;
+  }
+  delta_time = (float)1.0 / frames_sec;
+  delta_in_ms = 1000/ frames_sec;
+
+  return true;
+
 }
 
 void Application::RequestShutdown(int reason) {
