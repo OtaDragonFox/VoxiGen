@@ -19,3 +19,6 @@ include_directories(src dep/glfw/include dep/spdlog/include)
 
 
 target_link_libraries(${PROJECT_NAME} glfw glad spdlog)
+
+add_custom_target(copy_assets COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake)
+add_dependencies(${PROJECT_NAME} copy_assets)
