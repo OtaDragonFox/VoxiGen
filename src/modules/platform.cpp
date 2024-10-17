@@ -4,20 +4,20 @@
 #include "modules/platforms/windows_platform.h"
 
 const char* Platform::GetName() {
-  return "Unknown";
+    return "Unknown";
 }
 
 bool Platform::CreateFolder(const char* folder_path) {
-  return false;
+    return false;
 }
 
 std::unique_ptr<Platform> PlatformManager::CreatePlatform() {
 #ifdef _WIN32
-  return std::make_unique<WindowsPlatform>();
+    return std::make_unique<WindowsPlatform>();
 #elif __linux__
-  return std::make_unique<LinuxPlatform>();
+    return std::make_unique<LinuxPlatform>();
 #else
-  return nullptr;  // Unsupported platform
+    return nullptr;  // Unsupported platform
 #endif
 }
 

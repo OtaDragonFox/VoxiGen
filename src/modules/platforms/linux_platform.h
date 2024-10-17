@@ -4,8 +4,8 @@
 #include "modules/platform.h"
 
 class LinuxPlatform final : public Platform {
- public:
-  const char* GetName() override;
-  bool CreateFolder(const char* folder_path) override;
+public:
+    const char* GetName() override;
+    bool CreateFolder(const char* folder_path) override;
 };
 #endif

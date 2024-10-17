@@ -4,10 +4,10 @@
 #include <sys/stat.h>
 
 const char* LinuxPlatform::GetName() {
-  return "Linux";
+    return "Linux";
 }
 
 bool LinuxPlatform::CreateFolder(const char* folder_path) {
-  return mkdir(folder_path, 0755) == 0 || errno == EEXIST;
+    return mkdir(folder_path, 0755) == 0 || errno == EEXIST;
 }
 #endif
