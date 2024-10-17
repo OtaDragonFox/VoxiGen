@@ -2,7 +2,7 @@
 #include "modules/file_io.h"
 #include "modules/logger.h"
 #include "modules/platform.h"
-
+#include "modules/renderer.h"
 #include <chrono>
 #include <thread>
 
@@ -24,9 +24,13 @@ void Application::StartApplication() {
   if(!SetFrameRate(10))
     return;
   
-
+  
 
   LOG_MESSG(PLATFORM.CreateFolder("test"));
+
+  game_renderer = new(Renderer);
+
+  game_renderer->SetupRenderer("Suer Cool GAME!",400,400);
 
 
   while(is_running)
@@ -39,6 +43,8 @@ void Application::StartApplication() {
     std::this_thread::sleep_for(std::chrono::nanoseconds( 50));
     auto end_frame_time = std::chrono::steady_clock::now();
     std::chrono::duration<float> elapsed = end_frame_time - start_frame_time;
+
+    game_renderer->OnFrame();
 
     if(((int)delta_in_ms - elapsed.count()*1000)> 0)
     {

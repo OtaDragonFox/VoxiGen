@@ -1,4 +1,5 @@
 #pragma once
+class Renderer;
 
 class Application
 {
@@ -21,7 +22,7 @@ public:
 
 
     void RequestShutdown(int reason);
-
+    
 
     static Application* game_application;
 private:
@@ -30,7 +31,7 @@ private:
     float delta_time = 0;
     float delta_in_ms = 0;
     
-
+    Renderer* game_renderer;
     bool is_running = true;
 
 
