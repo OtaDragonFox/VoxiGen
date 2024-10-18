@@ -19,6 +19,7 @@ int main() {
 }
 
 void Application::StartApplication() {
+    InitLogger();
     // LOG_MESSG("welcome to voxigen");
     // LOG_WARNG("welcome to voxigen");
     // LOG_ERROR("welcome to voxigen");
