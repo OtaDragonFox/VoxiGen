@@ -1,4 +1,5 @@
 #pragma once
+#include "render/shader.h"
 #include <atomic>
 
 class GLFWwindow;
@@ -18,6 +19,10 @@ public:
 private:
     GLFWwindow* application_window = nullptr;
     int size_x = 0, size_y = 0;
+
+    // tmp for testing
+    Shader shader_;
+    unsigned int vao_ = 0, vbo_ = 0;
 
     static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
 };
