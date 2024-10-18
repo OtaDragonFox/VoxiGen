@@ -27,9 +27,8 @@ private:
     float delta_time = 0;
     float delta_in_ms = 0;
 
-    Renderer* game_renderer;
-    Renderer* game_renderer2;
-    bool is_running = true;
+    Renderer* game_renderer_ = nullptr;
+    bool is_running_ = true;
 };
 
 #define APP Application::GetApplication()
