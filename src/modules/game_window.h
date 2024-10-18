@@ -20,5 +20,4 @@ private:
     int size_x = 0, size_y = 0;
 
     static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
-    static void WindowCloseCallback(GLFWwindow* window);
 };

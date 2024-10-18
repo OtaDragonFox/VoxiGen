@@ -38,7 +38,6 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
 
 void GameWindow::SetupWindowCallbacks() {
     glfwSetFramebufferSizeCallback(application_window, FramebufferResizeCallback);
-    glfwSetWindowCloseCallback(application_window, WindowCloseCallback);
 }
 
 void GameWindow::OnFrameRender() {
@@ -52,6 +51,7 @@ void GameWindow::OnFrameRender() {
 
 void GameWindow::DestroyWindow() const {
     glfwDestroyWindow(application_window);
+    current_active_windows -= 1;
 }
 
 bool GameWindow::WindowShouldClose() const {
@@ -60,8 +60,4 @@ bool GameWindow::WindowShouldClose() const {
 
 void GameWindow::FramebufferResizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
-}
-
-void GameWindow::WindowCloseCallback(GLFWwindow* window) {
-    current_active_windows -= 1;
 }
