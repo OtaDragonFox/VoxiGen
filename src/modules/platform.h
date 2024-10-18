@@ -1,11 +1,14 @@
 #pragma once
 #include <memory>
+#include <string>
+#include <optional>
 
 class Platform {
 public:
     virtual ~Platform() = default;
     virtual const char* GetName();
-    virtual bool CreateFolder(const char* folder_path);
+    static bool CreateFolder(const char* folder_path);
+    static std::optional<std::string> GetFileContentAsString(const char* file_path);
 };
 
 class PlatformManager {

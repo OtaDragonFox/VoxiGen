@@ -6,6 +6,6 @@
 class LinuxPlatform final : public Platform {
 public:
     const char* GetName() override;
-    bool CreateFolder(const char* folder_path) override;
+    // bool CreateFolder(const char* folder_path) override;
 };
 #endif
