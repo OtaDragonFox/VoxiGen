@@ -1,7 +1,7 @@
 #include "game_window.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "logger.h"
+#include "../modules/logger.h"
 
 std::atomic<unsigned int> GameWindow::current_active_windows{0};
 

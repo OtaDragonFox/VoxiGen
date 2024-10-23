@@ -1,5 +1,5 @@
 #pragma once
-#include "render/shader.h"
+#include "shader.h"
 #include <atomic>
 
 class GLFWwindow;

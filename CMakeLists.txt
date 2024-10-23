@@ -5,7 +5,7 @@ project(voxigen VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 
 
-file(GLOB_RECURSE voxigen_src CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
+file(GLOB_RECURSE voxigen_src CONFIGURE_DEPENDS "src/*.h" "src/*.cpp" "dep/glm/*.hpp" "dep/glm/*.inl" )
 
 add_executable(${PROJECT_NAME} ${voxigen_src})
 
@@ -15,7 +15,7 @@ add_subdirectory(dep/spdlog)
 
 #include directories
 
-include_directories(src dep/glfw/include dep/spdlog/include)
+include_directories(src dep/glfw/include dep/spdlog/include dep/glm/)
 
 
 target_link_libraries(${PROJECT_NAME} glfw glad spdlog)

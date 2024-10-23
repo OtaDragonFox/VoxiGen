@@ -1,14 +1,14 @@
 #include "main.h"
 #include "modules/file_io.h"
-#include "modules/game_window.h"
+#include "renderer/game_window.h"
 #include "modules/logger.h"
 #include "modules/platform.h"
-#include "modules/renderer.h"
+#include "renderer/renderer.h"
 #include <chrono>
 #include <thread>
 #include <GLFW/glfw3.h>
-
 #include <iostream>
+#include "math/aabb.h"
 
 Application* Application::game_application = nullptr;
 using namespace std::chrono_literals;
@@ -29,11 +29,7 @@ void Application::StartApplication() {
 
     LOG_MESSG(PLATFORM.CreateFolder("test"));
 
-    glfwInit();
-    //TODO: look into if we should go a bit newer for some fancy GLFW features :P
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
     game_renderer_ = new Renderer();
     game_renderer_->SetupRenderer("Suer Cool GAME!", 400, 400);
@@ -45,7 +41,7 @@ void Application::StartApplication() {
         std::this_thread::sleep_for(std::chrono::nanoseconds(50));
         auto end_frame_time = std::chrono::steady_clock::now();
         std::chrono::duration<float> elapsed = end_frame_time - start_frame_time;
-
+                          
         game_renderer_->OnFrame();
 
         if (((int)delta_in_ms - elapsed.count() * 1000) > 0) {
