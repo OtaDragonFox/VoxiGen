@@ -2,7 +2,7 @@
 #include "shader.h"
 #include <atomic>
 
-class GLFWwindow;
+struct GLFWwindow;
 
 class GameWindow {
 public:

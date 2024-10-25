@@ -1,5 +1,4 @@
 #include "main.h"
-#include "modules/file_io.h"
 #include "renderer/game_window.h"
 #include "modules/logger.h"
 #include "modules/platform.h"
