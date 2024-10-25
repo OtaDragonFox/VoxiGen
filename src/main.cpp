@@ -3,8 +3,7 @@
 #include "modules/logger.h"
 #include "modules/platform.h"
 #include "renderer/renderer.h"
-#include <chrono>
-#include <thread>
+#include "modules/GameTime.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "math/aabb.h"
@@ -22,50 +21,37 @@ void Application::StartApplication() {
     // LOG_MESSG("welcome to voxigen");
     // LOG_WARNG("welcome to voxigen");
     // LOG_ERROR("welcome to voxigen");
-    FileIO::LoadTextFromFile("a");  //-> TODO: this is testing code needs to be reworked later
-    if (!SetFrameRate(60))
-        return;
 
     LOG_MESSG(PLATFORM.CreateFolder("test"));
 
-
+    game_time = new GameTime();
+    game_time->SetFramesPerSecound(60);
 
     game_renderer_ = new Renderer();
     game_renderer_->SetupRenderer("Suer Cool GAME!", 400, 400);
 
     while (is_running_) {
-        auto start_frame_time = std::chrono::steady_clock::now();
-        //TODO: move time stuff into a custom class
+        game_time->SetFrameRenderStart();
 
-        std::this_thread::sleep_for(std::chrono::nanoseconds(50));
-        auto end_frame_time = std::chrono::steady_clock::now();
-        std::chrono::duration<float> elapsed = end_frame_time - start_frame_time;
-                          
+        
+
+        game_time->__DebugSleepThreadForDebugging(50);
         game_renderer_->OnFrame();
 
-        if (((int)delta_in_ms - elapsed.count() * 1000) > 0) {
-            // LOG_MESSG("frame took {0:.3f}ms to process", (elapsed.count() * 1000));
-            std::this_thread::sleep_for(std::chrono::milliseconds(int64_t(delta_in_ms - elapsed.count() * 1000)));
-        } else {
-            LOG_ERROR("FRAME TAKES TOO LONG TO RENDER !");
-        }
+        game_time->CalculateFrameEndDelta();
+
 
         if (GameWindow::current_active_windows == 0) {
             LOG_MESSG("All windows where closed.");
             is_running_ = false;
         }
     }
+
+    free(game_renderer_);
+    free(game_time);
 }
 
-bool Application::SetFrameRate(const float frames_sec) {
-    if (!(frames_sec > 5)) {
-        return false;
-    }
-    delta_time = 1.0f / frames_sec;
-    delta_in_ms = 1000 / frames_sec;
 
-    return true;
-}
 
 void Application::RequestShutdown(int reason) {
     //TODO: Log reason -> on crash should log everything to file and provide extra information
