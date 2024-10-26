@@ -1,7 +1,7 @@
 #pragma once
 class Renderer;
 class GameTime;
-
+class GameEventSystem;
 class Application {
 public:
     void StartApplication();
@@ -23,6 +23,7 @@ private:
     GameTime* game_time = nullptr;
 
     Renderer* game_renderer_ = nullptr;
+    GameEventSystem* event_system = nullptr;
     bool is_running_ = true;
 };
 

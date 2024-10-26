@@ -5,7 +5,7 @@
 
 void GameTime::SetFramesPerSecound(int in_fps) {
 
-        if (!(in_fps > 5)) {
+        if (!(in_fps > 1)) {
         return;
     }
     delta_time = 1.0f / (float)in_fps;
@@ -17,11 +17,14 @@ void GameTime::SetFrameRenderStart() {
 }
 
 void GameTime::CalculateFrameEndDelta() {
-    auto end_frame_time = std::chrono::steady_clock::now();
+    end_frame_time = std::chrono::steady_clock::now();
     std::chrono::duration<float> elapsed = end_frame_time - start_frame_time;
 
-    if (((int)delta_in_ms - elapsed.count() * 1000) > 0) {
-        // LOG_MESSG("frame took {0:.3f}ms to process", (elapsed.count() * 1000));
+
+
+
+    if ((delta_in_ms - elapsed.count()) > 0) {
+        LOG_MESSG("frame took {0:.3f}ms to process", (elapsed.count() * 1000));
         std::this_thread::sleep_for(std::chrono::milliseconds(int64_t(delta_in_ms - elapsed.count() * 1000)));
     } else {
         LOG_ERROR("FRAME TAKES TOO LONG TO RENDER !");

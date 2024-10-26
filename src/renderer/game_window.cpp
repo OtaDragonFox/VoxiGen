@@ -94,3 +94,4 @@ void GameWindow::FramebufferResizeCallback(GLFWwindow* window, const int width, 
     glfwMakeContextCurrent(window); // save old context?
     glViewport(0, 0, width, height);
 }
+

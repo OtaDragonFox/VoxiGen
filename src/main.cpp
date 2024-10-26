@@ -7,6 +7,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "math/aabb.h"
+#include "events/EventSystem.h"
+
 
 Application* Application::game_application = nullptr;
 using namespace std::chrono_literals;
@@ -25,7 +27,8 @@ void Application::StartApplication() {
     LOG_MESSG(PLATFORM.CreateFolder("test"));
 
     game_time = new GameTime();
-    game_time->SetFramesPerSecound(60);
+    game_time->SetFramesPerSecound(30);
+    event_system = new GameEventSystem();
 
     game_renderer_ = new Renderer();
     game_renderer_->SetupRenderer("Suer Cool GAME!", 400, 400);
@@ -35,7 +38,7 @@ void Application::StartApplication() {
 
         
 
-        game_time->__DebugSleepThreadForDebugging(50);
+        //game_time->__DebugSleepThreadForDebugging(5);
         game_renderer_->OnFrame();
 
         game_time->CalculateFrameEndDelta();
@@ -49,6 +52,7 @@ void Application::StartApplication() {
 
     free(game_renderer_);
     free(game_time);
+    free(event_system);
 }
 
 
