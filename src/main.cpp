@@ -8,7 +8,9 @@
 #include <iostream>
 #include "math/aabb.h"
 #include "events/EventSystem.h"
-
+#include "renderer/camera.h"
+#include "events/KeyListeners.h"
+// 
 
 Application* Application::game_application = nullptr;
 using namespace std::chrono_literals;
@@ -32,6 +34,11 @@ void Application::StartApplication() {
 
     game_renderer_ = new Renderer();
     game_renderer_->SetupRenderer("Suer Cool GAME!", 400, 400);
+
+    Camera* game_cam = new Camera();
+    event_system->RegisterKeyListener(game_cam);
+
+
 
     while (is_running_) {
         game_time->SetFrameRenderStart();

@@ -19,11 +19,12 @@ public:
 
     static Application* game_application;
 
-private:
-    GameTime* game_time = nullptr;
 
-    Renderer* game_renderer_ = nullptr;
     GameEventSystem* event_system = nullptr;
+    GameTime* game_time = nullptr;
+    Renderer* game_renderer_ = nullptr;
+private:
+
     bool is_running_ = true;
 };
 

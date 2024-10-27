@@ -24,7 +24,6 @@ void GameTime::CalculateFrameEndDelta() {
 
 
     if ((delta_in_ms - elapsed.count()) > 0) {
-        LOG_MESSG("frame took {0:.3f}ms to process", (elapsed.count() * 1000));
         std::this_thread::sleep_for(std::chrono::milliseconds(int64_t(delta_in_ms - elapsed.count() * 1000)));
     } else {
         LOG_ERROR("FRAME TAKES TOO LONG TO RENDER !");

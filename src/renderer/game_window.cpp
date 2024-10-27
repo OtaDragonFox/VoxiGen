@@ -2,8 +2,19 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "../modules/logger.h"
+#include <main.h>
+#include <events/EventSystem.h>
 
 std::atomic<unsigned int> GameWindow::current_active_windows{0};
+
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    APP.event_system->OnKeyboardKeyEvent(key, action);
+}
+
+
+
 
 void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const int in_size_y) {
     size_x = in_size_x;
@@ -43,6 +54,7 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
 
+
     glGenBuffers(1, &vbo_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
     constexpr float vertices[] = {
@@ -62,6 +74,7 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
 
 void GameWindow::SetupWindowCallbacks() {
     glfwSetFramebufferSizeCallback(application_window, FramebufferResizeCallback);
+    glfwSetKeyCallback(application_window, key_callback);
 }
 
 void GameWindow::OnFrameRender() {
@@ -93,5 +106,6 @@ bool GameWindow::WindowShouldClose() const {
 void GameWindow::FramebufferResizeCallback(GLFWwindow* window, const int width, const int height) {
     glfwMakeContextCurrent(window); // save old context?
     glViewport(0, 0, width, height);
+
 }
 
