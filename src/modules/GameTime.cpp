@@ -20,9 +20,6 @@ void GameTime::CalculateFrameEndDelta() {
     end_frame_time = std::chrono::steady_clock::now();
     std::chrono::duration<float> elapsed = end_frame_time - start_frame_time;
 
-
-
-
     if ((delta_in_ms - elapsed.count()) > 0) {
         std::this_thread::sleep_for(std::chrono::milliseconds(int64_t(delta_in_ms - elapsed.count() * 1000)));
     } else {
@@ -33,4 +30,8 @@ void GameTime::CalculateFrameEndDelta() {
 
 void GameTime::__DebugSleepThreadForDebugging(int in_ms) {
     std::this_thread::sleep_for(std::chrono::nanoseconds(in_ms));
+}
+
+float& GameTime::GetDeltaTime() {
+    return delta_time;
 }

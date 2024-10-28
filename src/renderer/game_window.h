@@ -16,7 +16,6 @@ public:
 
     static std::atomic<unsigned int> current_active_windows;
 
-private:
     GLFWwindow* application_window = nullptr;
     int size_x = 0, size_y = 0;
 

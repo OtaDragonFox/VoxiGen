@@ -5,8 +5,8 @@ class GameEventSystem;
 class Application {
 public:
     void StartApplication();
-    void RegisterApplication();
-    void LoadSettings();
+    //void RegisterApplication();
+    //void LoadSettings();
 
     inline static Application& GetApplication() {
         if (!game_application) {

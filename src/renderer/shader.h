@@ -1,20 +1,26 @@
 #pragma once
 #include <optional>
-#include "glad/glad.h"
+#include "types.h"
 
 enum shader_type { Vertex, Fragment, Geometry };
+
 
 class Shader {
 public:
     Shader() = default;
 
-    inline void UseProgram() const { glUseProgram(program_); }
+    void UseProgram();
 
     bool LoadShaderFromPath(const char* shader_path);
 
     void SetTimeUniform() const;
 
     [[nodiscard]] unsigned int GetProgram() const { return program_; }
+
+    void SetMat4(const char* name, const mat4& mat);
+
+
+
 
 private:
     unsigned int program_{0};

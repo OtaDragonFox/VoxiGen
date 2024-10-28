@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <fstream>
 
+
 const char* Platform::GetName() {
     return "Unknown";
 }
@@ -16,6 +17,7 @@ bool Platform::CreateFolder(const char* folder_path) {
 }
 
 std::optional<std::string> Platform::GetFileContentAsString(const char* file_path) {
+
     if (!std::filesystem::exists(file_path) || !std::filesystem::is_regular_file(file_path)) {
         LOG_WARNG("{} does not exist or is not a file!", file_path);
         return std::nullopt;

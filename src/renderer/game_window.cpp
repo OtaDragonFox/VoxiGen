@@ -45,6 +45,7 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
         return;
     }
     current_active_windows += 1;
+    glEnable(GL_DEPTH_TEST);
 
     // tmp for testing
     shader_ = Shader();
@@ -53,7 +54,6 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
     }
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
-
 
     glGenBuffers(1, &vbo_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);

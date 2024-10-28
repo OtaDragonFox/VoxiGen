@@ -3,6 +3,11 @@
 #include "glad/glad.h"
 #include "modules/logger.h"
 #include "modules/platform.h"
+#include <glm/gtc/type_ptr.hpp>
+
+void Shader::UseProgram() {
+    glUseProgram(program_);
+}
 
 bool Shader::LoadShaderFromPath(const char* shader_path) {
     const auto shader_source = PLATFORM.GetFileContentAsString(shader_path);
@@ -74,6 +79,13 @@ void Shader::SetTimeUniform() const {
     const long current_time_ms =
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     glUniform1f(uniform_location, static_cast<float>(current_time_ms - compiled_at_ms_) / 1000);
+}
+
+void Shader::SetMat4(const char* name, const mat4& mat){
+    UseProgram();
+    GLint location = glGetUniformLocation(program_, name);
+
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 std::optional<unsigned> Shader::CompileShader(const shader_type type, const char* source) {

@@ -33,10 +33,10 @@ void Application::StartApplication() {
     event_system = new GameEventSystem();
 
     game_renderer_ = new Renderer();
-    game_renderer_->SetupRenderer("Suer Cool GAME!", 400, 400);
+    game_renderer_->SetupRenderer("Suer Cool GAME!", 800, 800);
 
     Camera* game_cam = new Camera();
-    event_system->RegisterKeyListener(game_cam);
+    game_cam->SetupCamera();
 
 
 
@@ -45,8 +45,11 @@ void Application::StartApplication() {
 
         
 
-        //game_time->__DebugSleepThreadForDebugging(5);
+        game_cam->FrameStep(game_time->GetDeltaTime());
+
         game_renderer_->OnFrame();
+
+
 
         game_time->CalculateFrameEndDelta();
 
