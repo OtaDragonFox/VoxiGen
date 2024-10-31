@@ -13,6 +13,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     APP.event_system->OnKeyboardKeyEvent(key, action);
 }
 
+void FramebufferResizeCallback(GLFWwindow* window, int width, int height)
+{
+
+    APP.event_system->OnWindowResizeEvent(width, height);
+}
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    APP.event_system->OnMouseKeyEvent(button, action);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+     APP.event_system->OnScrollCallback(yoffset);
+}
 
 
 
@@ -45,7 +59,7 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
         return;
     }
     current_active_windows += 1;
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
 
     // tmp for testing
     shader_ = Shader();
@@ -75,13 +89,15 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
 void GameWindow::SetupWindowCallbacks() {
     glfwSetFramebufferSizeCallback(application_window, FramebufferResizeCallback);
     glfwSetKeyCallback(application_window, key_callback);
+    glfwSetMouseButtonCallback(application_window, mouse_button_callback);
+    glfwSetScrollCallback(application_window, scroll_callback);
 }
 
 void GameWindow::OnFrameRender() {
     glfwMakeContextCurrent(application_window);
     glClearColor(0.76f, 0.76f, 0.09f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
+    glClear(GL_COLOR_BUFFER_BIT );
+    
     shader_.UseProgram();
     shader_.SetTimeUniform();
     const int resolution_uniform_location = glGetUniformLocation(shader_.GetProgram(), "resolution");  //todo: cache glGetUniformLocation
@@ -103,9 +119,10 @@ bool GameWindow::WindowShouldClose() const {
     return glfwWindowShouldClose(application_window);
 }
 
-void GameWindow::FramebufferResizeCallback(GLFWwindow* window, const int width, const int height) {
-    glfwMakeContextCurrent(window); // save old context?
-    glViewport(0, 0, width, height);
-
+void GameWindow::OnWindowResize(int in_size_x, int in_size_y) {
+    glfwMakeContextCurrent(application_window);
+    LOG_MESSG("x: {},y: {}", in_size_x, in_size_y);
+    glViewport(0, 0, in_size_x, in_size_y);
+    size_x = in_size_x;
+    size_y = in_size_y;
 }
-

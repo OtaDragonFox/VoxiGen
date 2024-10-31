@@ -34,25 +34,14 @@ void Application::StartApplication() {
 
     game_renderer_ = new Renderer();
     game_renderer_->SetupRenderer("Suer Cool GAME!", 800, 800);
-
-    Camera* game_cam = new Camera();
-    game_cam->SetupCamera();
-
-
+    game_cam = new Camera();
+    game_cam->SetupCamera(800,800);
 
     while (is_running_) {
         game_time->SetFrameRenderStart();
-
-        
-
         game_cam->FrameStep(game_time->GetDeltaTime());
-
         game_renderer_->OnFrame();
-
-
-
         game_time->CalculateFrameEndDelta();
-
 
         if (GameWindow::current_active_windows == 0) {
             LOG_MESSG("All windows where closed.");

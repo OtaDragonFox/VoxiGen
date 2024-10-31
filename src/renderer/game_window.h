@@ -22,6 +22,5 @@ public:
     // tmp for testing
     Shader shader_;
     unsigned int vao_ = 0, vbo_ = 0;
-
-    static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
+    void OnWindowResize(int in_size_x, int in_size_y);
 };

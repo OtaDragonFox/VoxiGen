@@ -1,7 +1,7 @@
 #include <chrono>
 #include <thread>
 
-class std::chrono::steady_clock::time_point;
+
 class GameTime{
 public:
     void SetFramesPerSecound(int in_fps = 60);
