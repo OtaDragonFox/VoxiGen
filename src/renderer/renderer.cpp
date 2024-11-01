@@ -15,6 +15,11 @@ void Renderer::SetupRenderer(const char* in_window_name, ivec2 in_screen_resulut
     m_game_window->SetupWindow(in_window_name,in_screen_resulution);
 }
 
+int Renderer::RegisterMesh(Mesh* in_new_mesh) {
+    m_mesh_list.push_back(in_new_mesh);
+    return (m_mesh_list.size()-1);
+}
+
 void Renderer::OnFrame() {
     m_game_window->StartRenderFrame();
     m_game_window->EndRenderFrame();
