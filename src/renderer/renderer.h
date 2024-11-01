@@ -12,6 +12,8 @@ public:
 
     GameWindow* m_game_window;
 
+    Mesh m_test_mesh;
+
     std::vector<Mesh*> m_mesh_list;
 
 };

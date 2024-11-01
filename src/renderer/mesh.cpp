@@ -2,58 +2,36 @@
 #include <modules/logger.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
 
-void Mesh::RegisterMesh(int in_num_quads, bool in_generate_uvs) {
-    m_num_indicies = in_num_quads * 6;
-    m_indicies = new int [m_num_indicies];
-    m_num_verticies = in_num_quads+4;
-    m_verticies = new vec3 [m_num_verticies];
-    if(in_generate_uvs)
-    {
-        m_num_uvs = in_num_quads * 4;
-        m_uvs = new vec2 [m_num_uvs];
+void Mesh::ReserveMeshData(unsigned int in_num_of_polgyons) {
+    m_number_of_elements = in_num_of_polgyons;
+    m_polygons = new PolygonElement[in_num_of_polgyons];
+    m_indicies = new IndexElement[in_num_of_polgyons];
+
+    LOG_MESSG("Registered {} Polygons of data", in_num_of_polgyons);
+    m_has_data_reserved = true;
+}
+
+void Mesh::SetPolygonData(unsigned int in_index, const PolygonElement in_polygon) {
+    if(in_index >= m_number_of_elements || !m_has_data_reserved){
+        LOG_ERROR("Accessed index out of bounds Max index is {} Access being tried to access is {}",m_number_of_elements-1,in_index);
     }
-
-    m_is_mesh_registered = true;
+    m_polygons[in_index] = in_polygon;
+    unsigned int in_starting_index = in_index* 6;
+    m_indicies[in_index].m_elements[0] = in_starting_index + 0;
+    m_indicies[in_index].m_elements[1] = in_starting_index + 1;
+    m_indicies[in_index].m_elements[2] = in_starting_index + 2;
+    m_indicies[in_index].m_elements[3] = in_starting_index + 1;
+    m_indicies[in_index].m_elements[4] = in_starting_index + 3;
+    m_indicies[in_index].m_elements[5] = in_starting_index + 2;
 
 
 }
 
-void Mesh::SetQuadData(int in_index, const vec3 in_corners[4], bool in_enable_uvs, const vec2 in_uvs[4]) {
-    int in_vertex_start_index = in_index * 4;
-    int in_indicies_start_index = in_index * 6;
-
-    for(int i = 0; i < 4; i++){
-        SetVertexElement(in_vertex_start_index + i, in_corners[i]);
-        if (in_enable_uvs)
-        {
-            SetUvElement(in_vertex_start_index+i, in_uvs[i]);
-        }
-        
-    }
-    SetIndexElement(in_indicies_start_index + 0, in_indicies_start_index + 0);
-    SetIndexElement(in_indicies_start_index + 1, in_indicies_start_index + 1);
-    SetIndexElement(in_indicies_start_index + 2, in_indicies_start_index + 2);
-    SetIndexElement(in_indicies_start_index + 3, in_indicies_start_index + 1);
-    SetIndexElement(in_indicies_start_index + 4, in_indicies_start_index + 3);
-    SetIndexElement(in_indicies_start_index + 5, in_indicies_start_index + 2);
-
-
-}
-
-void Mesh::OnPrepareMesh() {
-    if(!m_is_mesh_registered && !m_is_mesh_prepared)
-    {
-        LOG_ERROR("Mesh isnt Registered");
-        return;
-    }
-
-}
-
-void Mesh::OnMeshRender() {
-    if(!m_is_mesh_registered && !m_is_mesh_prepared)
-    {
-        LOG_ERROR("Mesh isnt Registered");
+void Mesh::PrepareMesh(int in_shader_id) {
+    if(!m_has_data_reserved){
+        LOG_ERROR("Mesh has no data reserved!");
         return;
     }
     glGenVertexArrays(1, &m_VBO);
@@ -62,54 +40,39 @@ void Mesh::OnMeshRender() {
 
     glBindVertexArray(m_VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_EBO);
-    glBufferData(GL_ARRAY_BUFFER, m_num_verticies * sizeof(vec3), m_verticies, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferData(GL_ARRAY_BUFFER, m_number_of_elements * sizeof(PolygonElement), m_polygons, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_num_indicies * sizeof(int), m_indicies, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_number_of_elements * sizeof(IndexElement), m_indicies, GL_STATIC_DRAW);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);
-
-
-}
-
-
-void Mesh::OnDestroy() {
-    delete(m_verticies);
-    delete(m_indicies);
-    delete(m_uvs);
+    // color attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+ 
+    m_is_mesh_prepared = true;
 }
 
 void Mesh::SetMeshLocation(vec3 in_location) {
+    m_mesh_transform = glm::translate(mat4(1), in_location);
 
 }
 
-
-void Mesh::SetVertexElement(int in_index, vec3 in_vertex_data) {
-    if(in_index >= m_num_verticies){
-        LOG_ERROR("Index is out of Range! index: {} max: {}", in_index, m_num_verticies-1);
+void Mesh::RenderMesh() {
+    if(!m_is_mesh_prepared && !m_has_data_reserved){
+        LOG_ERROR("Mesh is not ready to be rendered Data_reserved {},Mesh_prepared {}!", m_has_data_reserved, m_is_mesh_prepared);
         return;
     }
-    m_verticies[in_index] = in_vertex_data;
+    glUseProgram(m_material_index);
+    glBindVertexArray(m_VAO);
+    glDrawElements(GL_TRIANGLES, m_number_of_elements * 6, GL_UNSIGNED_INT, 0);
 }
 
-void Mesh::SetIndexElement(int in_index, int in_index_data) {
-    if(in_index >= m_num_indicies){
-        LOG_ERROR("Index is out of Range! index: {} max: {}", in_index, m_num_indicies-1);
-        return;
-    }
-    m_indicies[in_index] = in_index_data;
-}
+void Mesh::OnDestroy() {
 
-void Mesh::SetUvElement(int in_index, vec2 in_uv_data) {
-    if(in_index >= m_num_uvs){
-        LOG_ERROR("Index is out of Range! index: {} max: {}", in_index, m_num_uvs-1);
-        return;
-    }
-    m_uvs[in_index] = in_uv_data;
+    delete(m_polygons);
+    delete(m_indicies);
+
 }
