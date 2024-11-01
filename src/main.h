@@ -10,25 +10,29 @@ public:
     //void LoadSettings();
 
     inline static Application& GetApplication() {
-        if (!game_application) {
-            game_application = new (Application);
+        if (!m_game_application) {
+            m_game_application = new (Application);
         }
-        return *game_application;
+        return *m_game_application;
     }
 
     void RequestShutdown(int reason);
 
-    static Application* game_application;
-    float zoom_level = 2;
+    static Application* m_game_application;
 
-    GameEventSystem* event_system = nullptr;
-    GameTime* game_time = nullptr;
-    Renderer* game_renderer_ = nullptr;
-    Camera* game_cam = nullptr;
+    GameEventSystem* m_event_system = nullptr;
+    GameTime* m_game_time = nullptr;
+    Renderer* m_game_renderer = nullptr;
+    Camera* m_game_cam = nullptr;
 
 private:
 
-    bool is_running_ = true;
+    bool m_is_running = true;
 };
 
 #define APP Application::GetApplication()
+#define RENDERER Application::GetApplication().m_game_renderer
+#define CAMERA Application::GetApplication().m_game_cam
+#define EVENT Application::GetApplication().m_event_system
+#define GTIME Application::GetApplication().m_game_time
+#define WINDOW Application::GetApplication().m_game_renderer->m_game_window

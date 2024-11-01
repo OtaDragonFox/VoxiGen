@@ -10,62 +10,61 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-void Camera::SetupCamera(int in_size_x, int in_size_y) {
-    camera_zoom_level = 2;
-    view_matrix = mat4(1.0f);
-    APP.event_system->RegisterKeyListener(this);
-    OnWindowResize(in_size_x, in_size_y);
+void Camera::SetupCamera(ivec2 in_screen_resulution) {
+    m_camera_zoom_level = 2;
+    m_view_matrix = mat4(1.0f);
+    EVENT->RegisterKeyListener(this);
+    OnWindowResize(in_screen_resulution);
 
 
 }
 
 void Camera::FrameStep(float in_delta_time) {
-    camera_location += vec3(direction.x, direction.y,0) * (camera_speed * in_delta_time);
+    m_camera_location += vec3(m_direction.x, m_direction.y,0) * (m_camera_speed * in_delta_time);
     RecalculateViewMatrix();
 
  
 }
 
-void Camera::OnWindowResize(int in_size_x, int in_size_y) {
-    window_size.x = in_size_x;
-    window_size.y = in_size_y;
+void Camera::OnWindowResize(const ivec2 in_screen_resulutuion) {
+    m_window_size = in_screen_resulutuion;
 
-    if(in_size_x == in_size_y){
-        aspect_ratio = vec2(1.0f,1.0f);
+    if(m_window_size.x == m_window_size.y){
+        m_aspect_ratio = vec2(1.0f,1.0f);
     }
     else{
 
-        if(in_size_x > in_size_y)
+        if(m_window_size.x > m_window_size.y)
         {
-            aspect_ratio.x = 1.0f;
-            aspect_ratio.y = (float)in_size_y / (float)in_size_x;
+            m_aspect_ratio.x = 1.0f;
+            m_aspect_ratio.y = (float)m_window_size.y / (float)m_window_size.x;
         }
         else
         {
-            aspect_ratio.x = (float)in_size_x / (float)in_size_y;
-            aspect_ratio.y = 1.0f;
+            m_aspect_ratio.x = (float)m_window_size.x / (float)m_window_size.y;
+            m_aspect_ratio.y = 1.0f;
 
         }
     }
     
-    projection_matrix = glm::ortho(
-        -aspect_ratio.x * camera_zoom_level, 
-        aspect_ratio.x * camera_zoom_level, 
-        -aspect_ratio.y * camera_zoom_level, 
-        aspect_ratio.y * camera_zoom_level, 
+    m_projection_matrix = glm::ortho(
+        -m_aspect_ratio.x * m_camera_zoom_level, 
+        m_aspect_ratio.x * m_camera_zoom_level, 
+        -m_aspect_ratio.y * m_camera_zoom_level, 
+        m_aspect_ratio.y * m_camera_zoom_level, 
         -1.0f, 
         1.0f);
     RecalculateViewMatrix();
 }
 
 void Camera::RecalculateViewMatrix() {
-    mat4 transform = glm::translate(mat4(1.0f), camera_location);
+    mat4 transform = glm::translate(mat4(1.0f), m_camera_location);
 
-    view_matrix = glm::inverse(transform);
+    m_view_matrix = glm::inverse(transform);
 
     // ORDER IS IMPORTANT FIRST PROJECTION THEN VIEW thank you for listening.
-    view_projection_matrix = projection_matrix * view_matrix;
-    APP.game_renderer_->game_app_window_->shader_.SetMat4("u_view_projection", view_projection_matrix);
+    m_view_projection_matrix = m_projection_matrix * m_view_matrix;
+    WINDOW->shader_.SetMat4("u_view_projection", m_view_projection_matrix);
 
 
 }
@@ -77,23 +76,22 @@ void Camera::RecalculateViewMatrix() {
 
 void Camera::OnKeyPress(int in_keycode, bool in_state) {
     if (GLFW_KEY_W == in_keycode){
-        is_forward_held = in_state;
+        m_is_forward_held = in_state;
     }
     if (GLFW_KEY_S == in_keycode){
-        is_back_held = in_state;
+        m_is_back_held = in_state;
     }
     if (GLFW_KEY_A == in_keycode){
-        is_left_held = in_state;
+        m_is_left_held = in_state;
     }
     
     if (GLFW_KEY_D == in_keycode){
-        is_right_held = in_state;
+        m_is_right_held = in_state;
     }
 
     //calculate player/camera direction -> :3
-    direction = vec2((float)is_right_held - (float)is_left_held,(float)is_forward_held-(float)is_back_held);
+    m_direction = vec2((float)m_is_right_held - (float)m_is_left_held,(float)m_is_forward_held-(float)m_is_back_held);
 
-    glm::normalize(direction);
 
 }
 
@@ -106,12 +104,12 @@ void Camera::OnMouseMove(float in_x_location, float in_y_location) {}
 
 void Camera::OnScrollScallback(float value) {
 
-    camera_zoom_level += value*0.1f;
-        projection_matrix = glm::ortho(
-        -aspect_ratio.x * camera_zoom_level, 
-        aspect_ratio.x * camera_zoom_level, 
-        -aspect_ratio.y * camera_zoom_level, 
-        aspect_ratio.y * camera_zoom_level, 
+    m_camera_zoom_level += value*0.1f;
+        m_projection_matrix = glm::ortho(
+        -m_aspect_ratio.x * m_camera_zoom_level, 
+        m_aspect_ratio.x * m_camera_zoom_level, 
+        -m_aspect_ratio.y * m_camera_zoom_level, 
+        m_aspect_ratio.y * m_camera_zoom_level, 
         -1.0f, 
         1.0f);
     RecalculateViewMatrix();

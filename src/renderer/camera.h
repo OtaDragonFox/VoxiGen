@@ -10,20 +10,14 @@ public:
     virtual void OnMouseKeyPress(int in_keycode, bool in_state) override;
     virtual void OnMouseMove(float in_x_location, float in_y_location) override;
     virtual void OnScrollScallback(float value ) override;
-    void SetupCamera(int in_size_x, int in_size_y);
+    void SetupCamera(ivec2 in_screen_resulution);
 
     //Step frame forward in time -> location updates
     void FrameStep(float in_delta_time);
 
-    void OnWindowResize(int in_size_x, int in_size_y);
+    void OnWindowResize(const ivec2 in_screen_resulutuion);
 
-    const vec3& GetPosition() const { return camera_location; }
-
-    const mat4& GetProjectionMatrix() const { return projection_matrix; }
-    const mat4& GetViewMatrix() const { return view_matrix; }
-    const mat4& GetViewProjectionMatrix() const { return view_projection_matrix; }
-
-
+    const vec3& GetPosition() const { return m_camera_location; }
 
 private:
     void RecalculateViewMatrix();
@@ -31,22 +25,22 @@ private:
 private:
 
     //originally this camera was derived by https://youtu.be/NjKv-HWstxA
-    mat4 projection_matrix;
-    mat4 view_matrix;
-    mat4 view_projection_matrix;
+    mat4 m_projection_matrix;
+    mat4 m_view_matrix;
+    mat4 m_view_projection_matrix;
 
-    vec3 camera_location = vec3(0.0f, 0.0f,0.0f);
-    float camera_rotation = 0.0f;
+    vec3 m_camera_location = vec3(0.0f, 0.0f,0.0f);
+    float m_camera_rotation = 0.0f;
 
-    vec2 window_size;
+    vec2 m_window_size;
 
-    vec2 aspect_ratio;
-    float camera_zoom_level = 2.0f;
+    vec2 m_aspect_ratio;
+    float m_camera_zoom_level = 2.0f;
 
-    bool is_forward_held = false;
-    bool is_back_held = false;
-    bool is_right_held = false;
-    bool is_left_held = false;
-    vec2 direction{};
-    float camera_speed = 1;
+    bool m_is_forward_held = false;
+    bool m_is_back_held = false;
+    bool m_is_right_held = false;
+    bool m_is_left_held = false;
+    vec2 m_direction{};
+    float m_camera_speed = 1;
 };

@@ -12,7 +12,7 @@
 #include "events/KeyListeners.h"
 // 
 
-Application* Application::game_application = nullptr;
+Application* Application::m_game_application = nullptr;
 using namespace std::chrono_literals;
 
 // Application entry point :P
@@ -20,42 +20,38 @@ int main() {
     APP.StartApplication();
 }
 
+const ivec2 BASE_RESULUTION(800,800);
+
 void Application::StartApplication() {
     InitLogger();
-    // LOG_MESSG("welcome to voxigen");
-    // LOG_WARNG("welcome to voxigen");
-    // LOG_ERROR("welcome to voxigen");
 
-    LOG_MESSG(PLATFORM.CreateFolder("test"));
+    m_game_time = new GameTime();
+    m_game_time->SetFramesPerSecound(30);
+    m_event_system = new GameEventSystem();
 
-    game_time = new GameTime();
-    game_time->SetFramesPerSecound(30);
-    event_system = new GameEventSystem();
+    m_game_renderer = new Renderer();
+    m_game_renderer->SetupRenderer("Suer Cool GAME!", BASE_RESULUTION);
+    m_game_cam = new Camera();
+    m_game_cam->SetupCamera(BASE_RESULUTION);
 
-    game_renderer_ = new Renderer();
-    game_renderer_->SetupRenderer("Suer Cool GAME!", 800, 800);
-    game_cam = new Camera();
-    game_cam->SetupCamera(800,800);
+    while (m_is_running) {
+        m_game_time->SetFrameRenderStart();
+        m_game_cam->FrameStep(m_game_time->GetDeltaTime());
+        m_game_renderer->OnFrame();
+        m_game_time->CalculateFrameEndDelta();
 
-    while (is_running_) {
-        game_time->SetFrameRenderStart();
-        game_cam->FrameStep(game_time->GetDeltaTime());
-        game_renderer_->OnFrame();
-        game_time->CalculateFrameEndDelta();
-
-        if (GameWindow::current_active_windows == 0) {
-            LOG_MESSG("All windows where closed.");
-            is_running_ = false;
-        }
     }
 
-    free(game_renderer_);
-    free(game_time);
-    free(event_system);
+    free(m_game_renderer);
+    free(m_game_time);
+    free(m_event_system);
+    free(m_game_cam);
 }
 
 
 
 void Application::RequestShutdown(int reason) {
-    //TODO: Log reason -> on crash should log everything to file and provide extra information
+    m_is_running = false;
+    //TODO: add reason why shutdown was initiated
+
 }

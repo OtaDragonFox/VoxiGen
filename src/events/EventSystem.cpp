@@ -35,12 +35,9 @@ void GameEventSystem::OnMouseKeyEvent(int in_keycode, int in_state) {
            key_event_listeners[i]->OnMouseKeyPress(in_keycode, false);
         }
         else {
-key_event_listeners[i]->OnMouseKeyPress(in_keycode, true);
+            key_event_listeners[i]->OnMouseKeyPress(in_keycode, true);
         }
-        
-        
-    }    //notify listeners
-
+    }
 }
 
 void GameEventSystem::OnScrollCallback(float value) {
@@ -57,9 +54,11 @@ void GameEventSystem::OnKeyboardKeyEventChange(int in_keycode) {
     }    //notify listeners
 }
 
-void GameEventSystem::OnWindowResizeEvent(int in_size_x, int in_size_y) {
-    APP.game_cam->OnWindowResize(in_size_x, in_size_y);
-    APP.game_renderer_->game_app_window_->OnWindowResize(in_size_x, in_size_y);
+void GameEventSystem::OnWindowResizeEvent(const ivec2 in_screen_resulution) {
+    CAMERA->OnWindowResize(in_screen_resulution);
+    WINDOW->OnWindowResize(in_screen_resulution);
 }
 
-
+void GameEventSystem::ShutDownRequest(int in_reason) {
+    APP.RequestShutdown(in_reason);
+}

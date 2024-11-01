@@ -2,26 +2,36 @@
 #pragma once
 #include <vector>
 #include "KeyListeners.h"
+#include <types.h>
 
 //class GameWindow;
 
 class GameEventSystem{
 public:
-    void OnKeyboardKeyEvent(int in_keycode, int in_state);
     void RegisterKeyListener(KeyListeners* in_new_listener);
+
+    // keyboard events
+    void OnKeyboardKeyEvent(int in_keycode, int in_state);
+    void OnKeyboardKeyEventChange(int in_keycode);
+
+
+    // mouse events
     void OnMouseKeyEvent(int in_keycode, int in_state);
+
     void OnScrollCallback(float value);
-    //std::vector<GameWindow*> game_windows;
-    //void RegisterWindow(GameWindow* in_game_window);
+
+    // window events
+    void OnWindowResizeEvent(const ivec2 in_screen_resulution);
+
+
+    // system events
+    void ShutDownRequest(int in_reason);
+
 
     bool key_states[512] ;
     bool mouse_states[512] ;
 
-    void OnKeyboardKeyEventChange(int in_keycode);
-
-    void OnWindowResizeEvent(int in_size_x, int in_size_y);
-
 private:
     std::vector<KeyListeners*>key_event_listeners;
-
+ 
 };

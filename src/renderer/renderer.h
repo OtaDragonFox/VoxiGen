@@ -1,14 +1,11 @@
 #pragma once
-
+#include <types.h>
 class GameWindow;
 
 class Renderer {
 public:
-    void SetupRenderer(const char* window_name, int in_size_x, int in_size_y);
+    void SetupRenderer(const char* in_window_name, ivec2 in_screen_resulution);
     void OnFrame();
 
-    GameWindow* game_app_window_ = nullptr;
-    //GameWindow* game_app_window2_ = nullptr;
-
-private:
+    GameWindow* m_game_window;
 };

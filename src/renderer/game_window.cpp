@@ -4,62 +4,60 @@
 #include "../modules/logger.h"
 #include <main.h>
 #include <events/EventSystem.h>
+#include <types.h>
 
-std::atomic<unsigned int> GameWindow::current_active_windows{0};
-
-
+// calllbacks 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    APP.event_system->OnKeyboardKeyEvent(key, action);
+    EVENT->OnKeyboardKeyEvent(key, action);
 }
-
 void FramebufferResizeCallback(GLFWwindow* window, int width, int height)
 {
-
-    APP.event_system->OnWindowResizeEvent(width, height);
+    EVENT->OnWindowResizeEvent(ivec2(width,height));
 }
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    APP.event_system->OnMouseKeyEvent(button, action);
+    EVENT->OnMouseKeyEvent(button, action);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-     APP.event_system->OnScrollCallback(yoffset);
+    EVENT->OnScrollCallback(yoffset);
 }
 
+void window_close_callback(GLFWwindow* window)
+{
+    EVENT->ShutDownRequest(1);
+}  
 
+// Class implementations
 
-void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const int in_size_y) {
-    size_x = in_size_x;
-    size_y = in_size_y;
-
-    if (size_x == 0 || size_y == 0) {
+void GameWindow::SetupWindow(const char* in_window_name,const ivec2 in_screen_size) {
+    m_screen_size = in_screen_size;
+    if (m_screen_size.x == 0 || m_screen_size.y == 0) {
         LOG_ERROR("WINDOW SIZE CANT BE 0 !!!! Please fix -> Error might have occured by passing screen value");
         glfwTerminate();
         return;
     }
 
-    application_window = glfwCreateWindow(size_x, size_y, window_name, NULL, NULL);
-    if (!application_window) {
+    m_application_window = glfwCreateWindow(m_screen_size.x, m_screen_size.y, in_window_name, NULL, NULL);
+    if (!m_application_window) {
         LOG_ERROR(
             "GLFWWindow failed to be created. -> Maybe try updating your video card driver if you havent done that in "
             "the past 10 years or create a issue on github");
         glfwTerminate();
         return;
     }
-    glfwMakeContextCurrent(application_window);
+    glfwMakeContextCurrent(m_application_window);
 
     SetupWindowCallbacks();
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         LOG_ERROR("Glad failed to initialize -> something went wrong in the Glad Loading process.");
         glfwTerminate();
-
         return;
     }
-    current_active_windows += 1;
-    //glEnable(GL_DEPTH_TEST);
+
 
     // tmp for testing
     shader_ = Shader();
@@ -87,42 +85,38 @@ void GameWindow::SetupWindow(const char* window_name, const int in_size_x, const
 }
 
 void GameWindow::SetupWindowCallbacks() {
-    glfwSetFramebufferSizeCallback(application_window, FramebufferResizeCallback);
-    glfwSetKeyCallback(application_window, key_callback);
-    glfwSetMouseButtonCallback(application_window, mouse_button_callback);
-    glfwSetScrollCallback(application_window, scroll_callback);
+    glfwSetFramebufferSizeCallback(m_application_window, FramebufferResizeCallback);
+    glfwSetKeyCallback(m_application_window, key_callback);
+    glfwSetMouseButtonCallback(m_application_window, mouse_button_callback);
+    glfwSetScrollCallback(m_application_window, scroll_callback);
+    glfwSetWindowCloseCallback(m_application_window, window_close_callback);
 }
 
-void GameWindow::OnFrameRender() {
-    glfwMakeContextCurrent(application_window);
+
+void GameWindow::DestroyWindow() const {
+    glfwDestroyWindow(m_application_window);
+}
+
+void GameWindow::StartRenderFrame() {
     glClearColor(0.76f, 0.76f, 0.09f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT );
-    
+
+}
+
+void GameWindow::EndRenderFrame() {
     shader_.UseProgram();
     shader_.SetTimeUniform();
     const int resolution_uniform_location = glGetUniformLocation(shader_.GetProgram(), "resolution");  //todo: cache glGetUniformLocation
-    glUniform2f(resolution_uniform_location, static_cast<float>(size_x), static_cast<float>(size_y));
+    glUniform2f(resolution_uniform_location, static_cast<float>(m_screen_size.x), static_cast<float>(m_screen_size.y));
 
     glBindVertexArray(vao_);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    glfwSwapBuffers(application_window);
+    glfwSwapBuffers(m_application_window);
     glfwPollEvents();
 }
 
-void GameWindow::DestroyWindow() const {
-    glfwDestroyWindow(application_window);
-    current_active_windows -= 1;
-}
-
-bool GameWindow::WindowShouldClose() const {
-    return glfwWindowShouldClose(application_window);
-}
-
-void GameWindow::OnWindowResize(int in_size_x, int in_size_y) {
-    glfwMakeContextCurrent(application_window);
-    LOG_MESSG("x: {},y: {}", in_size_x, in_size_y);
-    glViewport(0, 0, in_size_x, in_size_y);
-    size_x = in_size_x;
-    size_y = in_size_y;
+void GameWindow::OnWindowResize(const ivec2 in_screen_size) {
+    glViewport(0, 0, in_screen_size.x, in_screen_size.y);
+    m_screen_size = in_screen_size;
 }

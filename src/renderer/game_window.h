@@ -1,26 +1,27 @@
 #pragma once
 #include "shader.h"
-#include <atomic>
 
 struct GLFWwindow;
 
 class GameWindow {
 public:
-    void SetupWindow(const char* window_name, int in_size_x, int in_size_y);
+    void SetupWindow(const char* in_window_name,const ivec2 in_screen_size);
     void SetupWindowCallbacks();
 
-    void OnFrameRender();
     void DestroyWindow() const;
 
-    [[nodiscard]] bool WindowShouldClose() const;
+    //Start the render process so we can inject model rendering and other logic inbetween start and end.
+    void StartRenderFrame();
 
-    static std::atomic<unsigned int> current_active_windows;
+    //End of the frame render process dealing with input and swapping the buffer.
+    void EndRenderFrame();
 
-    GLFWwindow* application_window = nullptr;
-    int size_x = 0, size_y = 0;
 
+    GLFWwindow* m_application_window = nullptr;
+    ivec2 m_screen_size{};
+    
     // tmp for testing
     Shader shader_;
     unsigned int vao_ = 0, vbo_ = 0;
-    void OnWindowResize(int in_size_x, int in_size_y);
+    void OnWindowResize(const ivec2 in_screen_size);
 };
