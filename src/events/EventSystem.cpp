@@ -11,14 +11,12 @@ void GameEventSystem::OnKeyboardKeyEvent(int in_keycode, int in_state)
         if(in_state == 0){
             key_states[in_keycode] = 0;
             OnKeyboardKeyEventChange(in_keycode);
-                      LOG_MESSG(in_keycode); 
         }
     }
     else{
         if(in_state != 0){
             key_states[in_keycode] = 1; 
             OnKeyboardKeyEventChange(in_keycode);
-                      LOG_MESSG(in_keycode); 
         }
     }
 }
@@ -41,7 +39,7 @@ void GameEventSystem::OnMouseKeyEvent(int in_keycode, int in_state) {
 }
 
 void GameEventSystem::OnScrollCallback(float value) {
-        for(int i = 0; i < key_event_listeners.size(); i++)
+    for(int i = 0; i < key_event_listeners.size(); i++)
     {
         key_event_listeners[i]->OnScrollScallback(value);
     } 

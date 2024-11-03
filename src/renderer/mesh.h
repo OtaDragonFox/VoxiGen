@@ -1,4 +1,4 @@
-#pragma Once
+#pragma once
 #include <types.h>
 
 struct VertexElement{
@@ -47,12 +47,7 @@ public:
     
     void SetMeshLocation(vec3 in_location);
 
-
     void RenderMesh();
-
-
-    
-
 
     void OnDestroy();
 

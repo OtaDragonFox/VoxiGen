@@ -18,6 +18,7 @@ public:
     void OnWindowResize(const ivec2 in_screen_resulutuion);
 
     const vec3& GetPosition() const { return m_camera_location; }
+    mat4 m_view_projection_matrix;
 
 private:
     void RecalculateViewMatrix();
@@ -27,7 +28,6 @@ private:
     //originally this camera was derived by https://youtu.be/NjKv-HWstxA
     mat4 m_projection_matrix;
     mat4 m_view_matrix;
-    mat4 m_view_projection_matrix;
 
     vec3 m_camera_location = vec3(0.0f, 0.0f,0.0f);
     float m_camera_rotation = 0.0f;

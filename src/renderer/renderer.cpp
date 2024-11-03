@@ -2,6 +2,7 @@
 #include "game_window.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <renderer/Shader.h>
 
 void Renderer::SetupRenderer(const char* in_window_name, ivec2 in_screen_resulution) {
     
@@ -15,13 +16,17 @@ void Renderer::SetupRenderer(const char* in_window_name, ivec2 in_screen_resulut
     m_game_window->SetupWindow(in_window_name,in_screen_resulution);
 
     m_test_mesh.ReserveMeshData(1);
+    
     m_test_mesh.SetPolygonData(0, PolygonElement(
         VertexElement(vec3(-0.1f,0.1f,0.0f),vec2(0,0)),
         VertexElement(vec3(0.1f,0.1f,0.0f),vec2(0,0)),
         VertexElement(vec3(-0.1f,-0.1f,0.0f),vec2(0,0)),
         VertexElement(vec3(0.1f,-0.1f,0.0f),vec2(0,0))
     ));
-    m_test_mesh.PrepareMesh(m_game_window->shader_.GetProgram());
+
+    
+    m_test_shader.LoadShaderFile("assets/shader/test_2.glsl");
+    m_test_mesh.PrepareMesh(m_test_shader.GetProgram());
 
 }
 
@@ -32,6 +37,7 @@ int Renderer::RegisterMesh(Mesh* in_new_mesh) {
 
 void Renderer::OnFrame() {
     m_game_window->StartRenderFrame();
+    
     m_test_mesh.RenderMesh();
     m_game_window->EndRenderFrame();
 }

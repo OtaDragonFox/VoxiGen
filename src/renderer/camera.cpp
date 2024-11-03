@@ -5,7 +5,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include "renderer/renderer.h"
-#include "renderer/shader.h"
+#include "renderer/Shader.h"
 #include "renderer/game_window.h"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -64,7 +64,8 @@ void Camera::RecalculateViewMatrix() {
 
     // ORDER IS IMPORTANT FIRST PROJECTION THEN VIEW thank you for listening.
     m_view_projection_matrix = m_projection_matrix * m_view_matrix;
-    WINDOW->shader_.SetMat4("u_view_projection", m_view_projection_matrix);
+    //WINDOW->m_shader.UploadMat4("u_view_projection", m_view_projection_matrix);
+    RENDERER->m_test_shader.UploadMat4("u_view_projection", m_view_projection_matrix);
 
 
 }
@@ -96,7 +97,6 @@ void Camera::OnKeyPress(int in_keycode, bool in_state) {
 }
 
 void Camera::OnMouseKeyPress(int in_keycode, bool in_state) {
-    LOG_MESSG(in_keycode);
 
 }
 

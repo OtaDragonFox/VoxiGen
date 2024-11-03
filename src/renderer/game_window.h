@@ -1,5 +1,5 @@
 #pragma once
-#include "shader.h"
+#include "Shader.h"
 
 struct GLFWwindow;
 
@@ -21,7 +21,7 @@ public:
     ivec2 m_screen_size{};
     
     // tmp for testing
-    Shader shader_;
+    Shader m_shader;
     unsigned int vao_ = 0, vbo_ = 0;
     void OnWindowResize(const ivec2 in_screen_size);
 };

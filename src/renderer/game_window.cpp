@@ -59,29 +59,6 @@ void GameWindow::SetupWindow(const char* in_window_name,const ivec2 in_screen_si
     }
 
 
-    // tmp for testing
-    shader_ = Shader();
-    if (shader_.LoadShaderFromPath("assets/shader/test.glsl")) {
-        LOG_MESSG("Shader loaded");
-    }
-    //glGenVertexArrays(1, &vao_);
-    //glBindVertexArray(vao_);
-//
-    //glGenBuffers(1, &vbo_);
-    //glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    //constexpr float vertices[] = {
-    //    0.5f,  0.5f,  0.0f,  // top right
-    //    0.5f,  -0.5f, 0.0f,  // bottom right
-    //    -0.5f,  -0.5f, 0.0f,  // bottom left
-//
-    //    -0.5f, -0.5f, 0.0f,  // bottom left
-    //    -0.5f, 0.5f,  0.0f,  // top left
-    //    0.5f, 0.5f,  0.0f,  // top right
-    //};
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-//
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);  // location 0
-    //glEnableVertexAttribArray(0);
 }
 
 void GameWindow::SetupWindowCallbacks() {
@@ -104,14 +81,6 @@ void GameWindow::StartRenderFrame() {
 }
 
 void GameWindow::EndRenderFrame() {
-    //shader_.UseProgram();
-    //shader_.SetTimeUniform();
-    //const int resolution_uniform_location = glGetUniformLocation(shader_.GetProgram(), "resolution");  //todo: cache glGetUniformLocation
-    //glUniform2f(resolution_uniform_location, static_cast<float>(m_screen_size.x), static_cast<float>(m_screen_size.y));
-//
-    //glBindVertexArray(vao_);
-    //glDrawArrays(GL_TRIANGLES, 0, 6);
-
     glfwSwapBuffers(m_application_window);
     glfwPollEvents();
 }

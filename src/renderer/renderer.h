@@ -1,5 +1,6 @@
 #pragma once
 #include <types.h>
+#include "Shader.h"
 #include "mesh.h"
 class GameWindow;
 
@@ -13,7 +14,7 @@ public:
     GameWindow* m_game_window;
 
     Mesh m_test_mesh;
-
+    Shader m_test_shader;
     std::vector<Mesh*> m_mesh_list;
-
+    std::vector<Shader*> m_shader_list;
 };
